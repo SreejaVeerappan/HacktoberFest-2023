@@ -1,57 +1,47 @@
-import java.util.Scanner;
+import java.util.Arrays;
+import java.util.Random;
 
 public class BogoSort {
-    void bogoSort(int[] a) {
-        while (!isSorted(a)) {
-            shuffle(a);
+    
+    // Function to shuffle the array randomly
+    public static void shuffle(int[] array) {
+        Random rand = new Random();
+        for (int i = 0; i < array.length; i++) {
+            int randomIndex = rand.nextInt(array.length);
+            // Swap elements
+            int temp = array[i];
+            array[i] = array[randomIndex];
+            array[randomIndex] = temp;
         }
     }
 
-    void shuffle(int[] a) {
-        for (int i = 1; i < a.length; i++) {
-            swap(a, i, (int)(Math.random() * i));
-        }
-    }
-
-    void swap(int[] a, int i, int j) {
-        int temp = a[i];
-        a[i] = a[j];
-        a[j] = temp;
-    }
-
-    boolean isSorted(int[] a) {
-        for (int i = 1; i < a.length; i++) {
-            if (a[i] < a[i - 1]) {
+    // Function to check if the array is sorted
+    public static boolean isSorted(int[] array) {
+        for (int i = 1; i < array.length; i++) {
+            if (array[i - 1] > array[i]) {
                 return false;
             }
         }
         return true;
     }
 
-    void printArray(int[] arr) {
-        for (int i = 0; i < arr.length; i++) {
-            System.out.print(arr[i] + " ");
+    // Bogosort implementation
+    public static void bogoSort(int[] array) {
+        // Keep shuffling until the array is sorted
+        while (!isSorted(array)) {
+            shuffle(array);
         }
-        System.out.println();
     }
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the number of elements: ");
-        int n = scanner.nextInt();
-        int[] a = new int[n];
+        // Example array
+        int[] array = {3, 2, 5, 1, 4};
 
-        System.out.println("Enter the elements:");
+        System.out.println("Unsorted array: " + Arrays.toString(array));
 
-        for (int i = 0; i < n; i++) {
-            a[i] = scanner.nextInt();
-        }
+        // Apply Bogosort
+        bogoSort(array);
 
-        BogoSort ob = new BogoSort();
-
-        ob.bogoSort(a);
-
-        System.out.print("Sorted array: ");
-        ob.printArray(a);
+        System.out.println("Sorted array: " + Arrays.toString(array));
     }
 }
