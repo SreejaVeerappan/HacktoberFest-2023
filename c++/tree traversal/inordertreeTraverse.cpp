@@ -1,42 +1,49 @@
-#include <iostream>
 
-// Definition for a binary tree node
-struct TreeNode {
-    int val;
-    TreeNode* left;
-    TreeNode* right;
-    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-};
+class Node {
+    int data;
+    Node left, right;
 
-void inOrderTraversal(TreeNode* root) {
-    if (root == nullptr) {
-        return;
+    public Node(int item) {
+        data = item;
+        left = right = null;
     }
-
-    // Traverse the left subtree
-    inOrderTraversal(root->left);
-
-    // Visit the current node
-    std::cout << root->val << " ";
-
-    // Traverse the right subtree
-    inOrderTraversal(root->right);
 }
 
-int main() {
-    // Create a sample binary tree
-    TreeNode* root = new TreeNode(1);
-    root->left = new TreeNode(2);
-    root->right = new TreeNode(3);
-    root->left->left = new TreeNode(4);
-    root->left->right = new TreeNode(5);
+public class InorderTraversal {
 
-    // Perform in-order traversal
-    std::cout << "In-Order Traversal: ";
-    inOrderTraversal(root);
-    std::cout << std::endl;
+    // Function for inorder traversal
+    void inorder(Node node) {
+        if (node == null) {
+            return;
+        }
 
-    // Clean up memory (not shown in the code)
+        // Traverse the left subtree
+        inorder(node.left);
 
-    return 0;
+        // Visit the root
+        System.out.print(node.data + " ");
+
+        // Traverse the right subtree
+        inorder(node.right);
+    }
+
+    public static void main(String[] args) {
+        InorderTraversal tree = new InorderTraversal();
+        
+        // Construct a sample tree:
+        //       1
+        //      / \
+        //     2   3
+        //    / \
+        //   4   5
+        Node root = new Node(1);
+        root.left = new Node(2);
+        root.right = new Node(3);
+        root.left.left = new Node(4);
+        root.left.right = new Node(5);
+
+        // Perform inorder traversal
+        System.out.println("Inorder traversal:");
+        tree.inorder(root);
+    }
 }
