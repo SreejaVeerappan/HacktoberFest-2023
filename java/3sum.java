@@ -11,6 +11,7 @@ public class ThreeSum {
             if (i > 0 && nums[i] == nums[i - 1]) {
                 continue; // Skip duplicates
             }
+
             int target = -nums[i];
             int left = i + 1;
             int right = nums.length - 1;
@@ -19,15 +20,17 @@ public class ThreeSum {
                 int sum = nums[left] + nums[right];
                 if (sum == target) {
                     result.add(Arrays.asList(nums[i], nums[left], nums[right]));
+
+                    // Skip duplicates
+                    while (left < right && nums[left] == nums[left + 1]) {
+                        left++;
+                    }
+                    while (left < right && nums[right] == nums[right - 1]) {
+                        right--;
+                    }
+
                     left++;
                     right--;
-
-                    while (left < right && nums[left] == nums[left - 1]) {
-                        left++; // Skip duplicates
-                    }
-                    while (left < right && nums[right] == nums[right + 1]) {
-                        right--; // Skip duplicates
-                    }
                 } else if (sum < target) {
                     left++;
                 } else {
