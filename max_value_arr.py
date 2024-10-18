@@ -1,23 +1,15 @@
-#APPROACH -1
-#SORTING THE INITIAL LIST AND RETURNING THE LAST ELEMENT OF LIST
-def max(arr):
+# Import necessary modules
+import module1
+import module2
 
-    arr.sort()
-    return arr[-1]
-#APPROACH -2
-#ITERATING THROUGH ALL THE ELEMENTS IN LIST AND COMPARING EACH ELEMENT
+# Define variables and functions
+variable1 = value1
+variable2 = value2
 
-def max(arr):
-    
-    max_element = arr[0]
+def function1(argument1, argument2):
+    # Function body
 
-    for i in range(len(arr)):
-        if arr[i] > max_element:
-            max_element = arr[i]
-
-    return (max_element)
-
-#APPROACH-3
-#USING INBUILT FUNCTION
-def max(arr):
-    return (max(arr))
+# Main execution block
+if __name__ == "__main__":
+    result = function1(variable1, variable2)
+    print(result)
