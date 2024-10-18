@@ -1,78 +1,68 @@
-from turtle import Screen, Turtle
-from paddle import Paddle, Boundary
-from ball import Ball
-from scoreboard import Scoreboard
-import time
+import pygame
+import random
 
-turtle = Turtle()
-screen = Screen()
+pygame.init()
+WIDTH, HEIGHT = 800, 600
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Pong")
 
-points=screen.textinput(prompt="Kitne Points ka Khelega?", title="Batao bhaiii")
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+BLUE = (0, 0, 255)
+RED = (255, 0, 0)
 
-screen.bgcolor("black")
-screen.setup(width=800, height=600)
-screen.title("Pong")
-screen.tracer(0)
+paddle_width, paddle_height = 10, 100
+ball_radius = 10
 
-paddle=Boundary()
-paddle.boundary()
+paddle1_x, paddle1_y = 20, HEIGHT // 2 - paddle_height // 2
+paddle2_x, paddle2_y = WIDTH - 30, HEIGHT // 2 - paddle_height // 2
 
-ball=Ball()
-scoreboard=Scoreboard()
+ball_x, ball_y = WIDTH // 2, HEIGHT // 2
+ball_dx, ball_dy = 5, 5
 
-r_paddle=Paddle((350,0))
-l_paddle=Paddle((-350,0))
+running = True
+clock = pygame.time.Clock()
 
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
 
-screen.listen()
-screen.onkey(r_paddle.go_up, "Up")
-screen.onkey(r_paddle.go_down, "Down")
-screen.onkey(l_paddle.go_up, "w")
-screen.onkey(l_paddle.go_down, "s")
+    # Player 1 movement
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_w]:
+        paddle1_y -= 5
+    if keys[pygame.K_s]:
+        paddle1_y += 5
 
+    # Player 2 movement (controlled by AI or other logic)
+    # ...
 
-# start=screen.textinput(prompt="Start the game?",title="Shuru karein?")
-# if (start.lower() == "yes" or start.lower() == "y"):
-#     is_game_on=True
-# else:
-#     print("Toh aaya hi kyun BSDK")
-#     is_game_on=False
+    # Ball movement
+    ball_x += ball_dx
+    ball_y += ball_dy
 
-is_game_on=True
+    # Ball collision with walls
+    if ball_y <= 0 or ball_y >= HEIGHT - ball_radius:
+        ball_dy = -ball_dy
+    if ball_x <= 0 or ball_x >= WIDTH - ball_radius:
+        ball_dx = -ball_dx
 
-while is_game_on:
-    time.sleep(0.05)
-    screen.update()
-    ball.move()
+    # Ball collision with paddles
+    if (ball_x - ball_radius <= paddle1_x + paddle_width and
+            ball_y >= paddle1_y and ball_y <= paddle1_y + paddle_height):
+        ball_dx = -ball_dx
+    if (ball_x + ball_radius >= paddle2_x and
+            ball_y >= paddle2_y and ball_y <= paddle2_y + paddle_height):
+        ball_dx = -ball_dx
 
-    if scoreboard.l_score > int(points) or scoreboard.r_score > int(points):
-        is_game_on=False
-        turtle.color("white")
-        turtle.hideturtle()
-        turtle.write("Game Over",align="center",font=("Courier",80,"normal"))
+    # Update screen
+    screen.fill(BLACK)
+    pygame.draw.rect(screen, WHITE, (paddle1_x, paddle1_y, paddle_width, paddle_height))
+    pygame.draw.rect(screen, WHITE, (paddle2_x, paddle2_y, paddle_width, paddle_height))
+    pygame.draw.circle(screen, WHITE, (ball_x, ball_y), ball_radius)
+    pygame.display.flip()
 
-#       detect collision with wall
-    if ball.ycor()>280 or ball.ycor()<-280:
-        ball.bounce_y()
+    clock.tick(60)
 
-#         detect collision with the paddle
-    if ball.distance(r_paddle)<50 and ball.xcor()>320 or ball.distance(l_paddle)<50 and ball.xcor()<-320:
-        ball.bounce_x()
-
-#       R_paddle misses the ball
-    if ball.xcor()>380:
-        ball.reset_position()
-        scoreboard.l_point()
-
-#       L_paddle misses the ball
-    if ball.xcor()<-380:
-        ball.reset_position()
-        scoreboard.r_point()
-
-screen.exitonclick()
-
-
-
-
-
-
+pygame.quit()
