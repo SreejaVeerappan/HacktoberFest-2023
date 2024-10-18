@@ -1,61 +1,49 @@
-// recursive solution
 #include <bits/stdc++.h>
 using namespace std;
 
-int solve(vector<int> &num, int x) {
+const int MAX = INT_MAX;
+
+int solve(vector<int>& coins, int x) {
     if (x == 0) {
         return 0;
     }
     if (x < 0) {
-        return INT_MAX;
+        return MAX;
     }
-    int mini = INT_MAX;
-    for (int i = 0; i < num.size(); i++) {
-        int ans = solve(num, x - num[i]);
-        if (ans != INT_MAX) {
-            // considering the current coin so we add 1
+
+    int mini = MAX;
+    for (int i = 0; i < coins.size(); i++) {
+        int ans = solve(coins, x - coins[i]);
+        if (ans != MAX) {
             mini = min(mini, 1 + ans);
         }
     }
     return mini;
 }
 
-int minimumElements(vector<int> &num, int x) {
-    int ans = solve(num, x);
-    if (ans == INT_MAX) {
+int minimumElements(vector<int>& coins, int x) {
+    int ans = solve(coins, x);
+    if (ans == MAX) {
         return -1;
     }
     return ans;
 }
 
-int main() {
-    vector<int> num = {1, 2, 3}; // Example input vector
-    int x = 5; // Example value of x
-    int result = minimumElements(num, x);
-    cout << "Minimum number of elements required to form " << x << " is: " << result << endl;
-    return 0;
-}
-
-// recursive + memoization solution
-
-#include <bits/stdc++.h>
-using namespace std;
-
-int solvemem(vector<int> &num, int x, vector<int> &dp) {
+int solvemem(vector<int>& coins, int x, vector<int>& dp) {
     if (x == 0) {
         return 0;
     }
     if (x < 0) {
-        return INT_MAX;
+        return MAX;
     }
     if (dp[x] != -1) {
         return dp[x];
     }
-    int mini = INT_MAX;
-    for (int i = 0; i < num.size(); i++) {
-        int ans = solvemem(num, x - num[i], dp);
-        if (ans != INT_MAX) {
-            // considering the current coin so we add 1
+
+    int mini = MAX;
+    for (int i = 0; i < coins.size(); i++) {
+        int ans = solvemem(coins, x - coins[i], dp);
+        if (ans != MAX) {
             mini = min(mini, 1 + ans);
         }
     }
@@ -63,55 +51,52 @@ int solvemem(vector<int> &num, int x, vector<int> &dp) {
     return dp[x];
 }
 
-int minimumElements(vector<int> &num, int x) {
-    vector<int> dp(x + 1, -1); // Initialize dp array with -1
-    int ans = solvemem(num, x, dp);
-    if (ans == INT_MAX) {
+int minimumElementsMemoized(vector<int>& coins, int x) {
+    vector<int> dp(x + 1, -1);
+    int ans = solvemem(coins, x, dp);
+    if (ans == MAX) {
         return -1;
     }
     return ans;
 }
 
-int main() {
-    vector<int> num = {1, 2, 3}; // Example input vector
-    int x = 5; // Example value of x
-    int result = minimumElements(num, x);
-    cout << "Minimum number of elements required to form " << x << " is: " << result << endl;
-    return 0;
-}
-
-// tabulation solution 
-#include <bits/stdc++.h>
-using namespace std;
-
-int solvetab(vector<int> &num, int x) {
-    vector<int> dp(x + 1, INT_MAX);
+int solvetab(vector<int>& coins, int x) {
+    vector<int> dp(x + 1, MAX);
     dp[0] = 0;
+
     for (int i = 1; i <= x; i++) {
-        // trying to solve for every amount from 1 to x
-        for (int j = 0; j < num.size(); j++) {
-            if (i - num[j] >= 0 && dp[i - num[j]] != INT_MAX) {
-                dp[i] = min(dp[i], 1 + dp[i - num[j]]);
+        for (int j = 0; j < coins.size(); j++) {
+            if (i - coins[j] >= 0 && dp[i - coins[j]] != MAX) {
+                dp[i] = min(dp[i], 1 + dp[i - coins[j]]);
+                if (dp[i] == 1) {
+                    break; // If dp[i] becomes 1, no further iterations are needed
+                }
             }
         }
     }
-    if (dp[x] == INT_MAX) {
+
+    if (dp[x] == MAX) {
         return -1;
     }
     return dp[x];
 }
 
-int minimumElements(vector<int> &num, int x) {
-    // tabulation
-    return solvetab(num, x);
+int minimumElementsTabulation(vector<int>& coins, int x) {
+    return solvetab(coins, x);
 }
 
 int main() {
-    vector<int> num = {1, 2, 3}; // Example input vector
+    vector<int> coins = {1, 2, 3}; // Example input vector
     int x = 5; // Example value of x
-    int result = minimumElements(num, x);
-    cout << "Minimum number of elements required to form " << x << " is: " << result << endl;
+
+    int resultRecursive = minimumElements(coins, x);
+    cout << "Minimum number of elements required to form " << x << " using recursion: " << resultRecursive << endl;
+
+    int resultMemoized = minimumElementsMemoized(coins, x);
+    cout << "Minimum number of elements required to form " << x << " using recursion with memoization: " << resultMemoized << endl;
+
+    int resultTabulation = minimumElementsTabulation(coins, x);
+    cout << "Minimum number of elements required to form " << x << " using tabulation: " << resultTabulation << endl;
+
     return 0;
 }
-
-
